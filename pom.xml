@@ -1,10 +1,10 @@
 <project>
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.job4j</groupId>
-    <artifactId>junior</artifactId>
+    <artifactId>job4j</artifactId>
     <packaging>pom</packaging>
     <version>2.0</version>
-    <name>junior</name>
+    <name>job4j</name>
     <url>http://job4j.ru/</url>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -13,6 +13,7 @@
     </properties>  
     <modules>
         <module>chapter_001</module>
+        <module>junior</module>
     </modules>
     <build>
         <plugins>
