@@ -38,7 +38,7 @@ public class ArrayIterator implements Iterator {
      */
     @Override
     public Object next() throws NoSuchElementException{
-        if (outerIndex >= outerArray.length || innerIndex >= innerArray.length) throw new NoSuchElementException();
+
         if (!hasNext()) {
             if (outerArray.length > outerIndex) {
                 innerArray = outerArray[outerIndex++];

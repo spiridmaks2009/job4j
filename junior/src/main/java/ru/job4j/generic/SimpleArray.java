@@ -49,15 +49,15 @@ public class SimpleArray<T> implements Iterable{
              private int currentIndex = 0;
 
              @Override
-            public boolean hasNext() {
+             public boolean hasNext() {
                  return currentIndex < size && objects[currentIndex] != null;
-            }
+             }
 
-            @Override
-            public T next() {
-                return (T)objects[currentIndex++];
-            }
-        };
+             @Override
+             public T next() {
+                 return (T)objects[currentIndex++];
+             }
+         };
          return it;
     }
 }
