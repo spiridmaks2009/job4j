@@ -8,51 +8,54 @@ import java.util.NoSuchElementException;
  *
  * @author maksimspiridonov
  */
-public class Converter implements Iterator {
+public class Converter {
 
     /**
-     * Итератор итераторов
-     */
-    private Iterator<Iterator<Integer>> iterator;
-
-    /**
-     * Внутренний итератор
-     */
-    private Iterator<Integer> innerIterator;
-
-
-    /**
-     * @param it
-     * @return
+     * @param it - Исходный итератор
+     * @return Итератор целых чисел
      */
     Iterator<Integer> convert(Iterator<Iterator<Integer>> it) {
-        this.iterator = it;
-        this.innerIterator = it.next();
-        return this;
-    }
+        return new Iterator<Integer>() {
 
-    /**
-     * @return {@code true} if the iteration has more elements
-     */
-    @Override
-    public boolean hasNext() {
-        if (innerIterator.hasNext()) {
-            return true;
-        } else if (iterator.hasNext()) {
-            return true;
-        }
-        return false;
-    }
+            /**
+             * Внутренний итератор
+             */
+            Iterator<Integer> innerIterator;
 
-    /**
-     * @return the next element in the iteration
-     * @throws NoSuchElementException if the iteration has no more elements
-     */
-    @Override
-    public Integer next() {
-        if (!innerIterator.hasNext()) {
-            innerIterator = iterator.next();
-        }
-        return innerIterator.next();
+            /**
+             * @return {@code true} if the iteration has more elements
+             */
+            @Override
+            public boolean hasNext() {
+                boolean flag = false;
+                if (innerIterator == null || !innerIterator.hasNext()) {
+                    while (it.hasNext()) {
+                        innerIterator = it.next();
+                        if (innerIterator.hasNext()) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                } else if (innerIterator.hasNext()) {
+                    flag = true;
+                }
+                return flag;
+            }
+
+            /**
+             * @return the next element in the iteration
+             * @throws NoSuchElementException if the iteration has no more elements
+             */
+            @Override
+            public Integer next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                if (!innerIterator.hasNext() && it.hasNext()) {
+                    innerIterator = it.next();
+                }
+                return innerIterator.next();
+            }
+        };
     }
 }
