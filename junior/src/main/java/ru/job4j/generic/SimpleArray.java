@@ -2,36 +2,70 @@ package ru.job4j.generic;
 
 import java.util.Iterator;
 
-public class SimpleArray<T> implements Iterable{
+/**
+ * SimpleArray класс
+ */
+public class SimpleArray<T> implements Iterable {
     private Object[] objects;
-    private int index = 0, size = 0;
+    private int index, size;
 
+    /**
+     * Конструктор
+     *
+     * @param size - размер
+     */
     public SimpleArray(int size) {
         this.size = size;
         this.objects = new Object[size];
     }
 
-    public void add(T model){
-        if(index<size)
+    /**
+     * Добавить элемент
+     *
+     * @param model - данные
+     */
+    public void add(T model) {
+        if (index < size) {
             this.objects[index++] = model;
-        else
+        } else {
             throw new ArrayIndexOutOfBoundsException();
+        }
     }
 
+    /**
+     * Изменить элемент по индексу
+     *
+     * @param index - индекс
+     * @param model - данные
+     */
     public void set(int index, T model) {
-        if(index<size)
+        if (index < size) {
             this.objects[index] = model;
-        else
+        } else {
             throw new ArrayIndexOutOfBoundsException();
+        }
     }
 
+    /**
+     * Удалить элемент по индексу
+     *
+     * @param index - индекс
+     */
     public void delete(int index) {
-        if(index < size)
+        if (index < size) {
             this.objects[index] = null;
-        else
+        } else {
             throw new ArrayIndexOutOfBoundsException();
+        }
     }
 
+    /**
+     * Получить элемент имассива по индексу
+     *
+     * @param position - индекс
+     *
+     * @return Элемент по индексу
+     */
     public <T> T get(int position) {
 
         return (T) this.objects[position];
@@ -55,7 +89,7 @@ public class SimpleArray<T> implements Iterable{
 
              @Override
              public T next() {
-                 return (T)objects[currentIndex++];
+                 return (T) objects[currentIndex++];
              }
          };
          return it;
