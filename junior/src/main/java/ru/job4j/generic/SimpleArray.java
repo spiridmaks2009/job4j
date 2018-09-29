@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 /**
  * SimpleArray класс
+ *
+ * @author maksimspiridonov
  */
 public class SimpleArray<T> implements Iterable {
     private Object[] objects;
