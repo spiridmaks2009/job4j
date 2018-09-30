@@ -7,19 +7,19 @@ import java.util.Iterator;
  *
  * @author maksimspiridonov
  */
-public abstract class AbstractStore implements Store {
+public abstract class AbstractStore<E extends Base> implements Store<E> {
 
     /**
      * Массив данных
      */
-    private SimpleArray<Base> array;
+    private SimpleArray<E> array;
 
     /**
      * Конструктор
      *
      * @param array - массив данных
      */
-    public AbstractStore(SimpleArray<Base> array) {
+    public AbstractStore(SimpleArray<E> array) {
         this.array = array;
     }
 
@@ -29,8 +29,8 @@ public abstract class AbstractStore implements Store {
      * @param model - данные
      */
     @Override
-    public void add(Base model) {
-        array.add(model);
+    public void add(E model) {
+        array.add((E) model);
     }
 
     /**
@@ -41,12 +41,12 @@ public abstract class AbstractStore implements Store {
      * @return если изменил, то true
      */
     @Override
-    public boolean replace(String id, Base model) {
+    public boolean replace(String id, E model) {
         Iterator<Base> it = array.iterator();
         int index = 0;
         while (it.hasNext()) {
-            if (it.next().getId() == id) {
-                array.set(index, model);
+            if (it.next().getId().equals(id)) {
+                array.set(index, (E) model);
                 return true;
             }
             index++;
@@ -62,7 +62,7 @@ public abstract class AbstractStore implements Store {
      */
     @Override
     public boolean delete(String id) {
-        Iterator<Base> it = array.iterator();
+        Iterator<E> it = array.iterator();
         int index = 0;
         while (it.hasNext()) {
             if (it.next().getId() == id) {
@@ -81,8 +81,8 @@ public abstract class AbstractStore implements Store {
      * @return найденный элемент Base
      */
     @Override
-    public Base findById(String id) {
-        Iterator<Base> it = array.iterator();
+    public E findById(String id) {
+        Iterator<E> it = array.iterator();
         int index = 0;
         while (it.hasNext()) {
             if (it.next().getId() == id) {
