@@ -19,7 +19,7 @@ public class EvenNumbersIterator implements Iterator {
     /**
      * Индекс массива
      */
-    private int index = 0;
+    private int index;
 
     /**
      * Конструктор
