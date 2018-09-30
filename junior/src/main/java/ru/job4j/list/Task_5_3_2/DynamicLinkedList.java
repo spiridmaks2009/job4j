@@ -57,6 +57,21 @@ public class DynamicLinkedList<E> implements Iterable<E>{
     }
 
     /**
+     * Удалить первый элемент
+     *
+     * @return date
+     */
+    public E delete() {
+        if(size > 0) {
+            E date = first.date;
+            first = first.next;
+            size--;
+            return date;
+        }
+        return null;
+    }
+
+    /**
      * Returns an iterator over elements of type {@code T}.
      *
      * @return an Iterator.
