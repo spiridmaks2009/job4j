@@ -54,11 +54,7 @@ public class SimpleArray<T> implements Iterable {
      * @param index - индекс
      */
     public void delete(int index) {
-        if (index < size) {
-            this.objects[index] = null;
-        } else {
-            throw new ArrayIndexOutOfBoundsException();
-        }
+        System.arraycopy(objects, index+1, objects, index, size - index - 1);
     }
 
     /**

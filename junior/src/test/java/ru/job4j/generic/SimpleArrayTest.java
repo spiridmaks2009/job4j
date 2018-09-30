@@ -36,10 +36,10 @@ public class SimpleArrayTest {
         assertThat(array.get(2), is("Three+"));
     }
 
-    @Test (expected = NullPointerException.class)
+    @Test
     public void deleteTest() {
         array.delete(2);
-        assertThat(array.get(2), null);
+        assertThat(array.get(2), is("Four"));
     }
 
 }
