@@ -13,7 +13,7 @@ public class SimpleStackTest {
 
     @Before
     public void setUp() throws Exception {
-        stack = new SimpleStack<Integer>(new DynamicLinkedList<Integer>());
+        stack = new SimpleStack<Integer>();
         stack.push(1);
         stack.push(2);
         stack.push(3);

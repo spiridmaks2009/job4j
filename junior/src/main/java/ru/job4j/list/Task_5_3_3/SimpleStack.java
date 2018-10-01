@@ -18,11 +18,9 @@ public class SimpleStack<T>{
 
     /**
      * Конструктор
-     *
-     * @param container
      */
-    public SimpleStack(DynamicLinkedList<T> container) {
-        this.container = container;
+    public SimpleStack() {
+        this.container = new DynamicLinkedList<T>();
     }
 
     /**
