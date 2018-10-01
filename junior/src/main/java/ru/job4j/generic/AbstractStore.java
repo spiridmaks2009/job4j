@@ -15,22 +15,13 @@ public abstract class AbstractStore<E extends Base> implements Store<E> {
     private SimpleArray<E> array;
 
     /**
-     * Конструктор
-     *
-     * @param array - массив данных
-     */
-    public AbstractStore(SimpleArray<E> array) {
-        this.array = array;
-    }
-
-    /**
      * Добавить данные в массив
      *
      * @param model - данные
      */
     @Override
     public void add(E model) {
-        array.add((E) model);
+        array.add(model);
     }
 
     /**
@@ -46,7 +37,7 @@ public abstract class AbstractStore<E extends Base> implements Store<E> {
         int index = 0;
         while (it.hasNext()) {
             if (it.next().getId().equals(id)) {
-                array.set(index, (E) model);
+                array.set(index, model);
                 return true;
             }
             index++;
@@ -65,7 +56,7 @@ public abstract class AbstractStore<E extends Base> implements Store<E> {
         Iterator<E> it = array.iterator();
         int index = 0;
         while (it.hasNext()) {
-            if (it.next().getId() == id) {
+            if (it.next().getId().equals(id)) {
                 array.delete(index);
                 return true;
             }
@@ -85,7 +76,7 @@ public abstract class AbstractStore<E extends Base> implements Store<E> {
         Iterator<E> it = array.iterator();
         int index = 0;
         while (it.hasNext()) {
-            if (it.next().getId() == id) {
+            if (it.next().getId().equals(id)) {
                 return array.get(index);
             }
             index++;
