@@ -12,7 +12,7 @@ public abstract class AbstractStore<E extends Base> implements Store<E> {
     /**
      * Массив данных
      */
-    private SimpleArray<E> array;
+    private SimpleArray<E> array = new SimpleArray<E>(15);
 
     /**
      * Добавить данные в массив
