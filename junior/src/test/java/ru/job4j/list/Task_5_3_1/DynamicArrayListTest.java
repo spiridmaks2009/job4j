@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 
 public class DynamicArrayListTest {
 
-    DynamicArrayList<Integer> container;
+    private DynamicArrayList<Integer> container;
 
     @Before
     public void setUp() throws Exception {

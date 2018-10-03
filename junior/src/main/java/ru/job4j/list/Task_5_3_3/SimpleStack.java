@@ -40,4 +40,13 @@ public class SimpleStack<T>{
     public T poll() {
         return container.delete();
     }
+
+    /**
+     * Получить размер контейнера
+     *
+     * @return
+     */
+    public int getSize() {
+        return container.getSize();
+    }
 }

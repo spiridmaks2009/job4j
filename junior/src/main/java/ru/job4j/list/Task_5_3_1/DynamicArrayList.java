@@ -17,18 +17,22 @@ public class DynamicArrayList<E> implements Iterable<E> {
     /**
      * Внутренний массив для хранения элементов
      */
-    Object[] container;
+    private Object[] container;
 
     /**
      * Счетчик модификации коллекции
      */
-    int modCount;
+    private int modCount;
 
+    /**
+     * Индекс элемента контейнера
+     */
+    private int index;
 
     /**
      * Размер коллекции
      */
-    int size;
+    private int size;
 
     /**
      * Конструктор
@@ -39,6 +43,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
         this.container = container;
         size = container.length;
         modCount++;
+        index = size;
     }
 
     /**
@@ -47,11 +52,20 @@ public class DynamicArrayList<E> implements Iterable<E> {
      * @param value - значение элемента
      */
     public void add(E value) {
-        Object[] temp = new Object[size + 1];
-        System.arraycopy(container, 0, temp, 0, size);
-        temp[size] = value;
-        this.container = temp;
+        if (index == size) {
+            addSize();
+        }
+        container[index++] = value;
         modCount++;
+    }
+
+    /**
+     * Увеличить размер контейнера
+     */
+    public void addSize() {
+        Object[] temp = new Object[size * 2];
+        System.arraycopy(this.container,0, temp, 0, size);
+        this.container = temp;
     }
 
     /**
@@ -73,23 +87,19 @@ public class DynamicArrayList<E> implements Iterable<E> {
     public Iterator<E> iterator() {
         return new Iterator<E>() {
 
-            /**
-             * Внутренний итератор коллекции
-             */
-            Iterator<E> it = (Iterator<E>) Arrays.asList(container).iterator();
-
+            private int position;
 
             /**
              * Код модификации коллекции
              */
-            int expectedModCount = modCount;
+            private int expectedModCount = modCount;
 
             /**
              * @return {@code true} if the iteration has more elements
              */
             @Override
             public boolean hasNext() {
-                return it.hasNext();
+                return container[position] != null && position < size;
             }
 
             @Override
@@ -104,7 +114,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                return it.next();
+                return (E) container[position++];
             }
         };
     }

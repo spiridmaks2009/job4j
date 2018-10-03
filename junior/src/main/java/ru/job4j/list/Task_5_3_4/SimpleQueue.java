@@ -5,17 +5,22 @@ import ru.job4j.list.Task_5_3_3.SimpleStack;
 
 public class SimpleQueue<T> {
 
-    SimpleStack<T> stack;
+    private SimpleStack<T> mainStack = new SimpleStack<T>();
+    private SimpleStack<T> secondStack = new SimpleStack<T>();
 
-    SimpleStack<T> endStack;
-
-
-    public SimpleQueue() {
-        this.stack = new SimpleStack<T>();
-        this.endStack = new SimpleStack<T>();
-    }
+    private int size;
 
     public void push(T value) {
-        stack.push(value);
+        mainStack.push(value);
+        size++;
+    }
+
+    public T poll() {
+        if (secondStack.getSize() == 0) {
+            while (mainStack.getSize() != 0) {
+                secondStack.push(mainStack.poll());
+            }
+        }
+        return secondStack.poll();
     }
 }

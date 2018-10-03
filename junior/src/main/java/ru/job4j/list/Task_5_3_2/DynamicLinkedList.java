@@ -28,7 +28,6 @@ public class DynamicLinkedList<E> implements Iterable<E>{
      */
     private int modCount;
 
-
     /**
      * Добавить элемент коллекции
      *
@@ -118,6 +117,15 @@ public class DynamicLinkedList<E> implements Iterable<E>{
                 return node.next.date;
             }
         };
+    }
+
+    /**
+     * Получить размер контейнера
+     *
+     * @return size
+     */
+    public int getSize() {
+        return size;
     }
 
     /**
