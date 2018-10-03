@@ -14,7 +14,7 @@ public class SimpleStack<T>{
     /**
      * Контейнер для хранения данных
      */
-    DynamicLinkedList<T> container;
+    private DynamicLinkedList<T> container;
 
     /**
      * Конструктор

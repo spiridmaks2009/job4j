@@ -16,7 +16,7 @@ public class DynamicLinkedList<E> implements Iterable<E>{
     /**
      * Первый элемент коллекции
      */
-    Node<E> first;
+    private Node<E> first;
 
     /**
      * Размер коллекции
@@ -83,12 +83,12 @@ public class DynamicLinkedList<E> implements Iterable<E>{
             /**
              * Элемент итератора
              */
-            Node<E> node = first;
+            private Node<E> node = first;
 
             /**
              * Код модификации коллекции
              */
-            int expectedModCount = modCount;
+            private int expectedModCount = modCount;
 
             /**
              *
@@ -96,6 +96,9 @@ public class DynamicLinkedList<E> implements Iterable<E>{
              */
             @Override
             public boolean hasNext() {
+                if(expectedModCount != modCount) {
+                    throw new ConcurrentModificationException();
+                }
                 if (node.next != null) {
                     return true;
                 }
@@ -108,9 +111,7 @@ public class DynamicLinkedList<E> implements Iterable<E>{
              * @throws NoSuchElementException if the iteration has no more elements
              */
             public E next() {
-                if(expectedModCount != modCount) {
-                    throw new ConcurrentModificationException();
-                }
+
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
