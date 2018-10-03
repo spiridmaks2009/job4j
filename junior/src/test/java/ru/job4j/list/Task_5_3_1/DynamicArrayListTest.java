@@ -17,7 +17,12 @@ public class DynamicArrayListTest {
 
     @Before
     public void setUp() throws Exception {
-        container = new DynamicArrayList<Integer>(new Integer[]{1, 2, 3, 4, 5});
+        container = new DynamicArrayList<Integer>();
+        container.add(1);
+        container.add(2);
+        container.add(3);
+        container.add(4);
+        container.add(5);
     }
 
     @Test

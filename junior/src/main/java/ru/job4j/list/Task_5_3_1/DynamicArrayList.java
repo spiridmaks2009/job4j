@@ -17,7 +17,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
     /**
      * Внутренний массив для хранения элементов
      */
-    private Object[] container;
+    private Object[] container = new Object[5];
 
     /**
      * Счетчик модификации коллекции
@@ -27,24 +27,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
     /**
      * Индекс элемента контейнера
      */
-    private int index;
-
-    /**
-     * Размер коллекции
-     */
-    private int size;
-
-    /**
-     * Конструктор
-     *
-     * @param container - массив данных
-     */
-    public DynamicArrayList(Object[] container) {
-        this.container = container;
-        size = container.length;
-        modCount++;
-        index = size;
-    }
+    private int position;
 
     /**
      * Добавить элемент в коллекцию
@@ -52,10 +35,10 @@ public class DynamicArrayList<E> implements Iterable<E> {
      * @param value - значение элемента
      */
     public void add(E value) {
-        if (index == size) {
+        if (position == container.length) {
             addSize();
         }
-        container[index++] = value;
+        container[position++] = value;
         modCount++;
     }
 
@@ -63,8 +46,8 @@ public class DynamicArrayList<E> implements Iterable<E> {
      * Увеличить размер контейнера
      */
     public void addSize() {
-        Object[] temp = new Object[size * 2];
-        System.arraycopy(this.container,0, temp, 0, size);
+        Object[] temp = new Object[container.length * 2];
+        System.arraycopy(this.container,0, temp, 0, container.length);
         this.container = temp;
     }
 
@@ -99,7 +82,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
              */
             @Override
             public boolean hasNext() {
-                return container[position] != null && position < size;
+                return container[position] != null && position < container.length;
             }
 
             @Override
