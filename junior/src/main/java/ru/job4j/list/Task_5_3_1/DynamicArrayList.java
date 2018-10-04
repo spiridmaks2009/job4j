@@ -70,7 +70,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
     public Iterator<E> iterator() {
         return new Iterator<E>() {
 
-            private int position;
+            private int itPosition;
 
             /**
              * Код модификации коллекции
@@ -82,7 +82,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
              */
             @Override
             public boolean hasNext() {
-                return container[position] != null && position < container.length;
+                return container[itPosition] != null && this.itPosition < position ;
             }
 
             @Override
@@ -97,7 +97,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                return (E) container[position++];
+                return (E) container[itPosition++];
             }
         };
     }
