@@ -5,6 +5,6 @@ package ru.job4j.generic;
  *
  * @author maksimspiridonov
  */
-public class RoleStore<Role extends Base> extends AbstractStore<Role> {
+public class RoleStore extends AbstractStore<Role> {
 
 }
