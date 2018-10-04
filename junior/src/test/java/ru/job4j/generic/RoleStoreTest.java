@@ -8,11 +8,11 @@ import static org.junit.Assert.*;
 
 public class RoleStoreTest {
 
-    RoleStore<Role> store;
+    RoleStore store;
 
     @Before
     public void setUp() {
-        store = new RoleStore<Role>();
+        store = new RoleStore();
         Role role1 = new Role("1");
         Role role2 = new Role("2");
         Role role3 = new Role("3");

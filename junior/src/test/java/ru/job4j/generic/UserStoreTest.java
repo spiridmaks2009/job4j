@@ -9,11 +9,11 @@ import static org.junit.Assert.assertThat;
 
 public class UserStoreTest {
 
-    UserStore<User> store;
+    UserStore store;
 
     @Before
     public void setUp() {
-        store = new UserStore<User>();
+        store = new UserStore();
         User user1 = new User("1");
         User user2 = new User("2");
         User user3 = new User("3");
