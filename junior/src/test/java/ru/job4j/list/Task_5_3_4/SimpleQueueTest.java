@@ -8,23 +8,19 @@ import static org.junit.Assert.*;
 
 public class SimpleQueueTest {
 
-    SimpleQueue<String> queue;
+    @Test
+    public void whenPushThenPoll() {
+        SimpleQueue<String> queue = new SimpleQueue<String>();
 
-    @Before
-    public void setUp() throws Exception {
-        queue = new SimpleQueue<String>();
         queue.push("1");
+        assertThat(queue.poll(), is("1"));
         queue.push("2");
+        assertThat(queue.poll(), is("2"));
         queue.push("3");
         queue.push("4");
         queue.push("5");
-    }
-
-    @Test
-    public void whenPoll() {
-        assertThat(queue.poll(), is("1"));
-        assertThat(queue.poll(), is("2"));
         assertThat(queue.poll(), is("3"));
         assertThat(queue.poll(), is("4"));
+        assertThat(queue.poll(), is("5"));
     }
 }
