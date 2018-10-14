@@ -9,8 +9,10 @@ import java.util.NoSuchElementException;
  * @author maksimspiridonov
  */
 public class SimpleArray<T> implements Iterable {
+
     private Object[] objects;
-    private int index, size;
+    private int index;
+    private int size;
 
     /**
      * Конструктор
@@ -55,6 +57,7 @@ public class SimpleArray<T> implements Iterable {
      */
     public void delete(int index) {
         System.arraycopy(objects, index+1, objects, index, size - index - 1);
+        SimpleArray.this.index--;
     }
 
     /**
@@ -75,14 +78,14 @@ public class SimpleArray<T> implements Iterable {
      * @return an Iterator.
      */
     @Override
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
          Iterator<T> it = new Iterator<T>() {
 
              private int currentIndex = 0;
 
              @Override
              public boolean hasNext() {
-                 return currentIndex < size && objects[currentIndex] != null;
+                 return currentIndex < index;
              }
 
              @Override

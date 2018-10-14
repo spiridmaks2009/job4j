@@ -16,7 +16,7 @@ public class SimpleSet<E> implements Iterable<E> {
     private int index;
 
     /**
-     * Клнтейнер
+     * Контейнер
      *
      * @param container - контейнер
      */
