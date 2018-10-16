@@ -32,7 +32,7 @@ public class User4 {
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 37 * result + children;
-        result = 37 * result + + birthday.hashCode();
+        result = 37 * result + birthday.hashCode();
         return result;
     }
 }
