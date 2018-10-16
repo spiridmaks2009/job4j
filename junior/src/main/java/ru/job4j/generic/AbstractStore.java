@@ -33,7 +33,7 @@ public abstract class AbstractStore<E extends Base> implements Store<E> {
      */
     @Override
     public boolean replace(String id, E model) {
-        Iterator<Base> it = array.iterator();
+        Iterator<Base> it = (Iterator<Base>) array.iterator();
         int index = 0;
         while (it.hasNext()) {
             if (it.next().getId().equals(id)) {
