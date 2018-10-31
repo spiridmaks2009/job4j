@@ -1,44 +1,85 @@
 package ru.job4j.map;
 
+import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ConcurrentModificationException;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
+
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
-/**
- * @author anton.
- */
 public class MyHashMapTest {
-    private MyHashMap<Integer, String> MyHashMap = new MyHashMap<>();
-    private Iterator<String> iterator = MyHashMap.iterator();
+    MyHashMap<String, String> map;
 
-    @Test
-    public void whenAddNewElementAndGetHim() {
-        MyHashMap.insert(0, "Ivan");
-        String result = MyHashMap.get(0);
-        assertThat(result, is("Ivan"));
+    @Before
+    public void setUp() {
+        map = new MyHashMap<>();
+    }
+
+   @Test
+    public void whenAddNonEqualsThenTrue() {
+        String first = "Maksim";
+        String second = "Ivan";
+        assertThat(map.insert(first, "first"), is(true));
+        assertThat(map.insert(second, "second"), is(true));
     }
 
     @Test
-    public void whenAddNewElementAndGetHimUseIterator() {
-        MyHashMap.insert(0, "Ivan");
-        String result = iterator.next();
-        assertThat(result, is("Ivan"));
+    public void whenGetByKeyAndItExistedThenGetIt() {
+        String first = "Maksim";
+        String second = "Ivan";
+        map.insert(first, "first");
+        map.insert(second, "second");
+        assertThat(map.get(second), is("second"));
+        map.get("Ivan");
     }
 
     @Test
-    public void whenDeleteElement() {
-        MyHashMap.insert(0, "Ivan");
-        Boolean result = MyHashMap.delete(0);
-        assertThat(result, is(true));
+    public void whenGetNotExistedThanNull() {
+        assertNull(map.get("Vlad"));
     }
 
     @Test
-    public void whenAddTwoSameElementAndCheckSecondElementUseIterator() {
-        MyHashMap.insert(0, "Ivan");
-        MyHashMap.insert(0, "Ivan");
-        iterator.next();
-        Boolean result = iterator.hasNext();
-        assertThat(result, is(false));
+    public void resizeTest() {
+        MyHashMap<String, String> map = new MyHashMap<>();
+        assertThat(map.capacity(), is(16));
+        for (int index = 1; index < 20; index++) {
+            map.insert("key" + index + "that", "inserted" + index);
+        }
+        assertThat(map.capacity(), is(32));
     }
+
+    @Test
+    public void whenDeleteExistedThanTrue() {
+        map = new MyHashMap<>();
+        String first = "Maksim";
+        String second = "Ivan";
+        map.insert(first, "first");
+        map.insert(second, "second");
+        assertThat(map.delete(second), is(true));
+    }
+
+    @Test
+    public void whenDeleteNotExistedThenFalse() {
+        assertFalse(map.delete("Jack"));
+    }
+
+    @Test
+    public void whenIterateThanTrue() {
+        String first = "Maksim";
+        String second = "Igor";
+        map.insert(first, "first");
+        map.insert(second, "second");
+        Iterator itr = map.iterator();
+        assertThat(itr.hasNext(), is(true));
+        System.out.println(itr.next());
+        assertThat(itr.hasNext(), is(true));
+        System.out.println(itr.next());
+        assertThat(itr.hasNext(), is(false));
+    }
+
 }

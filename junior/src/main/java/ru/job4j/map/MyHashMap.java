@@ -1,5 +1,6 @@
 package ru.job4j.map;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 /**
@@ -7,114 +8,243 @@ import java.util.Iterator;
  *
  * @author maksimspiridonov
  */
-public class MyHashMap<K, V> implements Iterable{
-    private Object[] keys = new Object[10];
-    private Object[] values = new Object[10];
+public class MyHashMap<K, V>{
+    private MyEntry<K, V>[] table;
 
     /**
-     * Добавить элемент в HashMap
-     *
-     * @param key - ключ
-     * @param value - значение
+     * The default array capacity value.
+     */
+    final static int INITIAL_CAPACITY = 16;
+
+    /**
+     * Array load factor.
+     */
+    final static double LOAD_FACTOR = 0.75;
+
+    /**
+     * The next size value at which to resize (capacity * load factor).
+     */
+    private int threshold;
+
+    /**
+     * Number of elements in the array.
+     */
+    private int size = 0;
+
+    /**
+     * The number of changes in the array for the correct operation of the iterator.
+     */
+    private int modCount = 0;
+
+    public MyHashMap() {
+        table = new MyEntry[INITIAL_CAPACITY];
+        reTresh();
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public int capacity() {
+        return table.length;
+    }
+
+    /**
+     * Calculates the value of the threshold.
+     */
+    private void reTresh() {
+        threshold = (int) ((double) table.length * LOAD_FACTOR);
+    }
+
+    /**
+     * Inserts element in the array.
+     * @param key of the element.
+     * @param value of the element.
+     * @return true if inserted or false if cell is busy.
      */
     public boolean insert(K key, V value) {
-        try {
-            int arrayIndex = key.hashCode();
-            if (needNewSize(arrayIndex, this.keys) || needNewSize(arrayIndex, this.values)) {
-                AddSizeForKeys(arrayIndex);
-                AddSizeForValues(arrayIndex);
+        boolean valid = false;
+        int hash = hash(key);
+        int i = (table.length - 1) & hash;
+        if (table[i] == null) {
+            table[i] = new MyEntry<>(hash, key, value);
+            valid = true;
+            modCount++;
+            if (size++ >= threshold) {
+                resize();
             }
-            if (isKeyExist(key)) {
-                keys[arrayIndex] = key;
-                values[arrayIndex] = value;
-            } else return false;
-            return true;
-        } catch (Exception e) {
-            return false;
         }
+        return valid;
+
     }
 
     /**
-     * Проверка, существует ли ключ
-     *
-     * @param key
+     * Method resize the array if the threshold is exceeded.
      */
-    private boolean isKeyExist(K key) {
-        int valueIndex = key.hashCode();
-        return (keys[valueIndex] != null && keys[valueIndex].equals(key)) ? false : true;
+    private void resize() {
+        MyEntry<K, V>[] oldCont = table;
+        int oldCap = oldCont.length;
+        MyEntry<K, V>[] newCont = new MyEntry[oldCap << 1];
+        int newCap = newCont.length;
+        int i;
+        table = newCont;
+        reTresh();
+        for (int index = 0; index < oldCap; index++) {
+            if (oldCont[index] != null) {
+                i = oldCont[index].hash & (newCap - 1);
+                newCont[i] = oldCont[index];
+            }
+        }
+        modCount++;
     }
 
     /**
-     * Check size.
-     * @return result of ckeck.
-     */
-    private boolean needNewSize(int arrayIndex, Object[] objects) {
-        return arrayIndex > objects.length - 1;
-    }
-
-    /**
-     * Увеличить размер контейнера keys.
-     */
-    private void AddSizeForKeys(int newSize) {
-        Object[] newObject = new Object[newSize + 2];
-        System.arraycopy(this.keys, 0, newObject, 0, this.keys.length);
-        this.keys = newObject;
-    }
-
-    /**
-     * Увеличить размер контейнера values.
-     */
-    private void AddSizeForValues(int newSize) {
-        Object[] newObject = new Object[newSize + 2];
-        System.arraycopy(this.values, 0, newObject, 0, this.values.length);
-        this.values = newObject;
-    }
-
-    /**
-     * Получить значение по ключу
-     *
-     * @param key
+     * Returns the value of an element by key.
+     * @param key of item.
+     * @return value of item.
      */
     public V get(K key) {
-        return (V) values[key.hashCode()];
+        int i = hash(key) & (table.length - 1);
+        return table[i] == null ? null : table[i].value;
     }
 
     /**
-     * Удалить по ключу
-     *
-     * @param key
+     * Removes the element by key.
+     * @param key of value to be deleted.
+     * @return true if exists and is removed else false.
      */
     public boolean delete(K key) {
-        try {
-            keys[key.hashCode()] = null;
-            values[key.hashCode()] = null;
-            return true;
-        } catch (Exception e) {
-            return false;
+        boolean valid = false;
+        int i = hash(key) & (table.length - 1);
+        if (table[i] != null) {
+            table[i] = null;
+            size--;
+            valid = true;
         }
-
+        return valid;
     }
 
-    @Override
-    public Iterator<V> iterator() {
-        return new Iterator<V>() {
-            private int currentIndex = 0;
+    /**
+     * The method calculates the hash key value.
+     * @param key to be hashed.
+     * @return value of the hash.
+     */
+    private int hash(Object key) {
+        int h = key.hashCode();
+        return (key == null) ? 0 : h ^ (h >>> 16);
+    }
 
-            @Override
-            public boolean hasNext() {
-                while (values[currentIndex] == null && currentIndex < values.length - 1) {
-                    currentIndex++;
+    public Iterator<MyEntry<K, V>> iterator() {
+        return new MyHashMap.Itr();
+    }
+
+    private class Itr implements Iterator<MyEntry<K, V>> {
+
+        /**
+         * Index of element to be returned by subsequent call to next.
+         */
+        int cursor = 0;
+
+        /**
+         * Counter changes in the container.
+         */
+        int expectedModCount = modCount;
+
+        /**
+         * Index + 1 of last returned element from the table.
+         */
+        int position = 0;
+
+        @Override
+        public boolean hasNext() {
+            checkForModifications();
+            boolean valid = false;
+            if (cursor < size) {
+                valid = true;
+            }
+            return valid;
+        }
+
+        @Override
+        public MyEntry<K, V> next() {
+            if (!hasNext()) {
+                throw new IndexOutOfBoundsException();
+            }
+            MyEntry<K, V> result = null;
+            for (int index = position; index < table.length; index++) {
+                if (table[index] != null) {
+                    result = table[index];
+                    cursor++;
+                    position = ++index;
+                    break;
                 }
-                return values[currentIndex++] != null ? true : false;
+            }
+            return result;
+        }
+
+        /**
+         * Checks the container for changes after Iterator initialization.
+         * @throws ConcurrentModificationException if modified.
+         */
+        private void checkForModifications() throws ConcurrentModificationException {
+            if (expectedModCount != modCount) {
+                throw new ConcurrentModificationException();
+            }
+        }
+    }
+
+    /**
+     * MyEntry for storage elements.
+     * @param <K> type of key.
+     * @param <V> type of value
+     */
+    private final class MyEntry<K, V> {
+        final int hash;
+        final K key;
+        V value;
+
+        public MyEntry(int hash, K key, V value) {
+            this.hash = hash;
+            this.key = key;
+            this.value = value;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
             }
 
-            @Override
-            public V next() {
-                while (values[currentIndex] == null && currentIndex < values.length - 1) {
-                    currentIndex++;
-                }
-                return (V) values[currentIndex++];
+            MyEntry<?, ?> MyEntry = (MyEntry<?, ?>) o;
+
+            if (!key.equals(MyEntry.key)) {
+                return false;
             }
-        };
+            return value.equals(MyEntry.value);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = 17;
+            result = 31 * result + key.hashCode();
+            result = 31 * result + value.hashCode();
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return key + " : " + value;
+        }
     }
 }
