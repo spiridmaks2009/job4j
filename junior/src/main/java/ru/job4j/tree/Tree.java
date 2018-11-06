@@ -3,13 +3,13 @@ package ru.job4j.tree;
 import java.util.*;
 
 /**
- * класс MyTree
+ * класс Tree
  *
  * @param <E>
  *
  * @author maksimspiridonov
  */
-public class MyTree<E extends Comparable<E>> implements SimpleTree<E> {
+public class Tree<E extends Comparable<E>> implements SimpleTree<E> {
 
     /**
      * Корень дерева
@@ -21,7 +21,7 @@ public class MyTree<E extends Comparable<E>> implements SimpleTree<E> {
      *
      * @param root
      */
-    public MyTree(E root) {
+    public Tree(E root) {
         this.root = new Node<>(root);
     }
 

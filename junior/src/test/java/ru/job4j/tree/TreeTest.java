@@ -9,10 +9,10 @@ import static org.junit.Assert.*;
  * @version $Id$
  * @since 0.1
  */
-public class MyTreeTest {
+public class TreeTest {
     @Test
     public void when6ElFindLastThen6() {
-        MyTree<Integer> tree = new MyTree<>(1);
+        Tree<Integer> tree = new Tree<>(1);
         tree.add(1, 2);
         tree.add(1, 3);
         tree.add(1, 4);
@@ -26,7 +26,7 @@ public class MyTreeTest {
 
     @Test
     public void when6ElFindNotExitThenOptionEmpty() {
-        MyTree<Integer> tree = new MyTree<>(1);
+        Tree<Integer> tree = new Tree<>(1);
         tree.add(1, 2);
         assertThat(
                 tree.findBy(7).isPresent(),
@@ -36,7 +36,7 @@ public class MyTreeTest {
 
     @Test
     public void when7ElAddInBinaryThenCheck() {
-        MyTree<Integer> tree = new MyTree<>(1);
+        Tree<Integer> tree = new Tree<>(1);
         tree.add(1, 2);
         tree.add(1, 3);
         tree.add(2, 4);
