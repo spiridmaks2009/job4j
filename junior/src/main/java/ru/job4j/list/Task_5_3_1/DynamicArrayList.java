@@ -17,7 +17,7 @@ public class DynamicArrayList<E> implements Iterable<E> {
     /**
      * Внутренний массив для хранения элементов
      */
-    private Object[] container = new Object[5];
+    protected Object[] container = new Object[5];
 
     /**
      * Счетчик модификации коллекции
