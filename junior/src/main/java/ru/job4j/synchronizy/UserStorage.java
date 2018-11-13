@@ -20,7 +20,7 @@ public class UserStorage {
         userMap = new HashMap<>();
     }
 
-    public boolean add(User user) {
+    public synchronized boolean add(User user) {
         if (!userMap.containsKey(user.getId())) {
             userMap.put(user.getId(), user);
             return true;
@@ -28,7 +28,7 @@ public class UserStorage {
         return false;
     }
 
-    public boolean update(User user) {
+    public synchronized boolean update(User user) {
         if (userMap.containsKey(user.getId())) {
             userMap.replace(user.getId(), user);
             return true;
@@ -36,7 +36,7 @@ public class UserStorage {
         return false;
     }
 
-    public boolean delete(User user) {
+    public synchronized boolean delete(User user) {
         if (userMap.containsKey(user.getId())) {
             userMap.remove(user.getId());
             return true;
