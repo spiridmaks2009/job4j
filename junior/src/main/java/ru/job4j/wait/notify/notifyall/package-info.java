@@ -1,0 +1,1 @@
+package ru.job4j.wait.notify.notifyall;
