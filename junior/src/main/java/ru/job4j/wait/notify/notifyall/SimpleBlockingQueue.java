@@ -68,4 +68,8 @@ public class SimpleBlockingQueue<T> {
             return value;
         }
     }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
 }
