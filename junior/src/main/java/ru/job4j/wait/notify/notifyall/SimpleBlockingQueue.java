@@ -15,7 +15,7 @@ import java.util.Queue;
 public class SimpleBlockingQueue<T> {
 
     @GuardedBy("this")
-    private Queue<T> queue = new LinkedList<>();
+    private final Queue<T> queue = new LinkedList<>();
     /**
      * Размер очереди
      */
@@ -52,15 +52,11 @@ public class SimpleBlockingQueue<T> {
      *
      * @return
      */
-    public T poll() {
+    public T poll() throws InterruptedException {
         synchronized (queue) {
             while (queue.size() < 1) {
-                try {
-                    System.out.println("Consumer wait");
-                    queue.wait();
-                } catch (InterruptedException e) {
-
-                }
+                System.out.println("Consumer wait");
+                queue.wait();
             }
             T value = queue.poll();
             System.out.println(String.format("Consumer get %s", value));
@@ -70,6 +66,6 @@ public class SimpleBlockingQueue<T> {
     }
 
     public boolean isEmpty() {
-        return size == 0;
+        return queue.isEmpty();
     }
 }

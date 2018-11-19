@@ -1,17 +1,12 @@
 package ru.job4j.wait.notify.notifyall;
 
-import org.hamcrest.Matchers;
-import org.junit.Assert;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.regex.Matcher;
 import java.util.stream.IntStream;
-
-import static com.sun.org.apache.xerces.internal.util.PropertyState.is;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
 
 public class SimpleBlockingQueueTest {
 
@@ -33,9 +28,14 @@ public class SimpleBlockingQueueTest {
         Thread consumer = new Thread() {
             @Override
             public void run() {
-                queue.poll();
-                queue.poll();
-                queue.poll();
+                try {
+                    queue.poll();
+                    queue.poll();
+                    queue.poll();
+                }
+                catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             }
         };
 
@@ -61,7 +61,7 @@ public class SimpleBlockingQueueTest {
                 () -> {
                     while (!queue.isEmpty()  || !Thread.currentThread().isInterrupted()) {
                         try {
-                            Thread.sleep(1);
+//                            Thread.sleep(1);
                             buffer.add(queue.poll());
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -75,6 +75,6 @@ public class SimpleBlockingQueueTest {
         consumer.interrupt();
         consumer.join();
 
-        Assert.assertThat(buffer, is(Arrays.asList(0, 1, 2, 3, 4)));
+        assertThat(buffer, is(Arrays.asList(0, 1, 2, 3, 4)));
     }
 }
