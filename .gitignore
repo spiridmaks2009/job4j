@@ -25,5 +25,6 @@
  	.idea/inspectionProfiles/Project_Default.xml
  	*.iml
  	.idea
- 	 
+ 	.idea/libraries
+ 	.idea/
  	target
