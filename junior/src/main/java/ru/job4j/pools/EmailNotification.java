@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
  * @author maksimspiridonov
  */
 public class EmailNotification {
-    ExecutorService pool = Executors.newFixedThreadPool(
+    final ExecutorService pool = Executors.newFixedThreadPool(
             Runtime.getRuntime().availableProcessors()
     );
 
@@ -19,8 +19,8 @@ public class EmailNotification {
      * @param user
      */
     public void emailTo(User user) {
-        String subject = String.format("Notification %s to email %s", user.getUser(), user.getEmail());
-        String body = String.format("Add a new event to %s", user.getUser());
+        final String subject = String.format("Notification %s to email %s", user.getUser(), user.getEmail());
+        final String body = String.format("Add a new event to %s", user.getUser());
         send(subject, body, user.getEmail());
 
         pool.submit(new Runnable() {
