@@ -16,6 +16,7 @@ public class Board {
                 board[i][j] = new ReentrantLock();
             }
         }
+        createBlocks(10);
     }
 
     public ReentrantLock getCell(Cell cell) {
@@ -28,6 +29,15 @@ public class Board {
 
     public int getWidth() {
         return width;
+    }
+
+    private void createBlocks(int num) {
+        for(int i = 0; i < num; i++) {
+            int posX = (int) (Math.random() * height);
+            int posY = (int) (Math.random() * width);
+            board[posX][posY].lock();
+            System.out.println("Create block in (" + posX + "," + posY + ")");
+        }
     }
 
 }

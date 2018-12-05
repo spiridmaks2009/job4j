@@ -7,13 +7,15 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  */
 public class Player implements Runnable{
+    private String name;
     private Cell position;
     private Board board;
     private ReentrantLock lock;
 
-    public Player(Cell position, Board board) {
+    public Player(String name, Cell position, Board board) {
         this.position = position;
         this.board = board;
+        this.name = name;
     }
 
     public void setPosition(Cell position) {
@@ -22,7 +24,7 @@ public class Player implements Runnable{
 
     public boolean move(Cell source, Cell dist) throws InterruptedException{
         boolean flag = false;
-        System.out.println("Move from (" + source.getX() + "," + source.getY() + ") to ( "
+        System.out.println(name + " move from (" + source.getX() + "," + source.getY() + ") to ( "
                 + dist.getX() + "," + dist.getY() + ")");
         ReentrantLock oldCell = board.getCell(source);
         ReentrantLock newCell = board.getCell(dist);
@@ -49,15 +51,14 @@ public class Player implements Runnable{
      */
     @Override
     public void run() {
-        ReentrantLock startPos = board.getCell(position);
+        //ReentrantLock startPos = board.getCell(position);
         try {
-            startPos.lock();
             while(!Thread.currentThread().isInterrupted()) {
                 boolean result;
                 Cell dest = new Cell((int) (-1.5 + Math.random()*3) + position.getX(), (int) (-1.5 + Math.random()*3) + position.getY());
                 int dx = dest.getX();
                 int dy = dest.getY();
-                if(dx < 0 || dx > board.getHeight() || dy < 0 || dy < board.getWidth())
+                if(dx < 0 || dx > board.getHeight() || dy < 0 || dy > board.getWidth())
                 {
                     result = false;
                 } else {
@@ -69,8 +70,6 @@ public class Player implements Runnable{
                 Thread.sleep(1000);
             }
         } catch (InterruptedException ignored) { }
-        finally {
-            startPos.unlock();
-        }
     }
+
 }
