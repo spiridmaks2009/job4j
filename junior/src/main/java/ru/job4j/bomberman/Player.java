@@ -31,6 +31,7 @@ public class Player implements Runnable{
             setPosition(dist);
             newCell.lock();
             flag = true;
+            oldCell.unlock();
         }
         return flag;
     }
@@ -52,8 +53,16 @@ public class Player implements Runnable{
         try {
             startPos.lock();
             while(!Thread.currentThread().isInterrupted()) {
+                boolean result;
                 Cell dest = new Cell((int) (-1.5 + Math.random()*3) + position.getX(), (int) (-1.5 + Math.random()*3) + position.getY());
-                boolean result = move(position, dest);
+                int dx = dest.getX();
+                int dy = dest.getY();
+                if(dx < 0 || dx > board.getHeight() || dy < 0 || dy < board.getWidth())
+                {
+                    result = false;
+                } else {
+                    result = move(position, dest);
+                }
                 if (!result) {
                     continue;
                 }
