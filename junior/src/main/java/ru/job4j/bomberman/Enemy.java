@@ -3,16 +3,13 @@ package ru.job4j.bomberman;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- *
- */
-public class Player implements Runnable{
+public class Enemy implements Runnable {
     private String name;
     private Cell position;
     private Board board;
     private ReentrantLock lock;
 
-    public Player(String name, Cell position, Board board) {
+    public Enemy(String name, Cell position, Board board) {
         this.position = position;
         this.board = board;
         this.name = name;
@@ -65,15 +62,12 @@ public class Player implements Runnable{
                     result = move(position, dest);
                 }
                 if (!result) {
+                    System.out.println(name + " waiting...");
+                    Thread.sleep(5000);
                     continue;
                 }
                 Thread.sleep(1000);
-                if(board.getCell(position).hasQueuedThreads()) {
-                    System.out.println("Hero was eaten");
-                 Thread.currentThread().interrupt();
-                }
             }
         } catch (InterruptedException ignored) { }
     }
-
 }
