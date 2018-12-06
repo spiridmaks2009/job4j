@@ -1,4 +1,3 @@
-
 user - role = many-to-one
 role - rules = many-to-many
 item - user = one-to-one
@@ -6,8 +5,6 @@ item - comments = one-to-many
 item - attachs = one-to-many
 item - category = many-to-one
 item - state = many-to-one
-
-create database requests;
 
 create table category(
     id serial primary key,
@@ -51,7 +48,7 @@ create table item(
 );
 
 alter table users
-add foreign key (item_id) references item (id);
+ADD foreign key (item_id) references item (id);
 
 create table comments(
     id serial primary key,
