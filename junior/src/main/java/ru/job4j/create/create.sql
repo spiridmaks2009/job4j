@@ -18,14 +18,14 @@ create table state(
 
 create table users(
     id serial primary key,
-    name varchar(2000)
-    --item_id int references item(id)
+    name varchar(2000),
+    role_id int references role(id)
 );
 
 create table role(
     id serial primary key,
-    name_role varchar(2000),
-    user_id int references users(id)
+    name_role varchar(2000)
+
 );
 
 create table rules(
