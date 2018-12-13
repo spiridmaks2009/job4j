@@ -1,5 +1,7 @@
-1) select * from product as p, type as t
-   where t.name = 'СЫР' and t.id = p.type_id;
+1) select * from product as p
+   left join type as t
+   on t.id = p.type_id
+   where t.name = 'СЫР';
 
 2) select * from product
    where name like '%мороженое%';
@@ -16,8 +18,10 @@
          right join type as t on t.id = p.type_id) as t_p
    group by t_p.type_id;
 
-6) select * from product as p, type as t
-      where t.name = 'СЫР' or where t.name = 'МОЛОКО' and t.id = p.type_id;
+6) select * from product as p
+   left join type as t
+   on t.id = p.type_id
+   where t.name = 'СЫР' or t.name = 'МОЛОКО';
 
  7) select * from t2
         (select t_p.type_name, count(t_p.product_id) as count_product from
