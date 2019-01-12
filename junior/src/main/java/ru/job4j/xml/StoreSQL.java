@@ -48,8 +48,9 @@ public class StoreSQL implements AutoCloseable{
     public void generate(int n) {
         try (Statement st = connection.createStatement()) {
                 for (int i = 0; i < n; i++) {
-                    st.executeUpdate(String.format("INSERT INTO entry VALUES (%s)",i));
+                    st.addBatch(String.format("INSERT INTO entry VALUES (%s)",i));
                 }
+                st.executeBatch();
                 connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();

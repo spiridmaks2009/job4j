@@ -12,7 +12,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class SAXPars extends DefaultHandler {
 
-    String thisElement = "";
+    private String thisElement = "";
 
     public long getSum() {
         return sum;

@@ -28,7 +28,7 @@ public class StoreXML {
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             jaxbMarshaller.marshal(ent, target);
         } catch (JAXBException e) {
-
+            e.printStackTrace();
         }
     }
 
