@@ -18,6 +18,10 @@ public class TrackerSQL implements ITracker, AutoCloseable {
 
     private Connection connection;
 
+    public TrackerSQL(Connection connection) {
+        this.connection = connection;
+    }
+
     public boolean init() {
         try (InputStream in = TrackerSQL.class.getClassLoader().getResourceAsStream("app.properties")) {
             Properties config = new Properties();
@@ -141,7 +145,7 @@ public class TrackerSQL implements ITracker, AutoCloseable {
     public List<Item> findByName(String key) {
         List<Item> listItems = new ArrayList<>();
         try (Statement st = connection.createStatement();
-             ResultSet rs = st.executeQuery("SELECT * FROM items WHERE name = " + key)) {
+             ResultSet rs = st.executeQuery("SELECT * FROM items WHERE name = '" + key + "'")) {
             while (rs.next()) {
                 listItems.add(new Item(rs.getString("id"), rs.getString("name"),
                         rs.getString("desc"), rs.getTimestamp("create")));
