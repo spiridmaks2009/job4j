@@ -8,6 +8,8 @@ import org.quartz.JobExecutionException;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -24,21 +26,26 @@ public class QuartzJob implements Job {
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         Config config = new Config();
         config.init();
+        Database db = new Database();
+        db.init();
+        db.createNewTable();
+
+        Date lastDate = db.getLastDate();
+        if(lastDate == null){
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.DAY_OF_YEAR, 1);
+            lastDate = cal.getTime();
+        }
         String url = config.get("jsoup.url");
         ParserJsoup parser = new ParserJsoup(url);
         LinkedList<Vacancy> list = null;
         try {
-            list = parser.parse();
+            list = parser.parse(lastDate);
         } catch (IOException e) {
             LOG.error(e);
         } catch (ParseException e) {
             LOG.error(e);
         }
-
-        Database db = new Database();
-        db.init();
-        db.createNewTable();
-        Date lastDate = db.getLastDate();
 
         for (Vacancy vac:list) {
             if (vac.getDate().after(lastDate)) {

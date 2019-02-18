@@ -12,6 +12,7 @@ import java.text.*;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Класс для получения данных из HTML
@@ -22,20 +23,22 @@ public class ParserJsoup{
 
     private String url;
     private LinkedList<Vacancy> list = new LinkedList<>();
-    private final int PAGES = 10;
+    //private final int PAGES = 10;
 
     public ParserJsoup(String url) {
         this.url = url;
     }
 
-    public LinkedList<Vacancy> parse() throws IOException, ParseException {
-        for (int i = 0; i < PAGES; i++) {
+    public LinkedList<Vacancy> parse(Date lastDate) throws IOException, ParseException {
+        int i = 0;
+        while (true) {
             Document doc = Jsoup.connect(url + "\\" + i).get();
             Elements elements = doc.getElementsByAttributeValue("class", "forumTable").get(0).getElementsByTag("tr");
             for (Element elem : elements) {
                 String title = elem.text();
-                if (title.contains("java") || title.contains("Java") || title.contains("JAVA")
-                        && !title.contains("javas") && !title.contains("javaS") && !title.contains("Javas") && !title.contains("JavaS")) {
+                //if (title.contains("java") || title.contains("Java") || title.contains("JAVA")
+                  //      && !title.contains("javas") && !title.contains("javaS") && !title.contains("Javas") && !title.contains("JavaS")) {
+                if (Pattern.compile("\\b[Jj][Aa][Vv][Aa]\\b[^Jj]").matcher(title).find()) {
                     String vacurl = elem.getElementsByAttributeValue("class", "postslisttopic").get(0).child(0).attr("href");
                     Document vacancyDoc = Jsoup.connect(vacurl).get();
                     Elements message = vacancyDoc.getElementsByAttributeValue("class", "msgTable");
@@ -51,11 +54,15 @@ public class ParserJsoup{
                     } else {
                         date = format.parse(sDate);
                     }
+                    if (date.before(lastDate)) {
+                        return list;
+                    }
                     String text = firstmsg.get(1).getElementsByAttributeValue("class", "msgBody").last().text();
                     list.add(new Vacancy(title, text, vacurl, date));
                 }
             }
+            i++;
         }
-            return list;
+        //return list;
     }
 }

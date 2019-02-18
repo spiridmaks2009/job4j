@@ -49,10 +49,13 @@ public class Database implements AutoCloseable {
     }
 
     public void addVacancyInDb(Vacancy newVacancy) {
-        String query = String.format("INSERT INTO Vacancy (name, text, link, \"create\") VALUES ('%s', '%s', '%s', " +
-                        "CURRENT_TIMESTAMP)", newVacancy.getName(), newVacancy.getText(), newVacancy.getLink());
-        try(Statement st = connection.createStatement()) {
-            st.executeUpdate(query);
+        String query = "INSERT INTO Vacancy (name, text, link, \"create\") VALUES (?, ?, ?, ?)";
+        try(PreparedStatement st = connection.prepareStatement(query)) {
+            st.setString(1, newVacancy.getName());
+            st.setString(2, newVacancy.getText());
+            st.setString(3, newVacancy.getLink());
+            st.setDate(4, (java.sql.Date) newVacancy.getDate());
+            int rows = st.executeUpdate();
             LOG.info("Добавлена вакансия: " + newVacancy.getName());
         } catch (SQLException e) {
             LOG.error("Exception",e);
@@ -116,9 +119,10 @@ public class Database implements AutoCloseable {
     }
 
     public void setLastDate(Date date) {
-        String query = String.format("INSERT INTO LastDate (date) VALUES (" + date.toString() + ")");
-        try(Statement st = connection.createStatement()) {
-            st.executeUpdate(query);
+        String query = "INSERT INTO LastDate (date) VALUES (?)";
+        try(PreparedStatement st = connection.prepareStatement(query)) {
+            st.setDate(1, (java.sql.Date) date);
+            st.executeUpdate();
         } catch (SQLException e) {
             LOG.error("Exception",e);
         }
